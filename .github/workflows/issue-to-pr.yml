@@ -51,9 +51,26 @@ jobs:
               }
             }
             
-            // 提取编辑后的内容（在代码块中）
-            const contentMatch = body.match(/```markdown\s*\n([\s\S]*?)\n```/);
-            const newContent = contentMatch ? contentMatch[1] : null;
+            // 提取编辑后的内容（在代码块中，支持 markdown 和 yaml）
+            const markdownMatch = body.match(/```markdown\s*\n([\s\S]*?)\n```/);
+            const yamlMatch = body.match(/```yaml\s*\n([\s\S]*?)\n```/);
+            const newContent = markdownMatch ? markdownMatch[1] : (yamlMatch ? yamlMatch[1] : null);
+            
+            // 判断文件类型
+            const isYaml = filePath && (filePath.endsWith('.yml') || filePath.endsWith('.yaml'));
+            
+            // 提取图片URLs（从issue中的图片）
+            const imageUrls = [];
+            // 匹配 Markdown 图片格式: ![alt](url)
+            const imagePattern = /!\[.*?\]\((https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|svg|webp))\)/gi;
+            let imageMatch;
+            while ((imageMatch = imagePattern.exec(body)) !== null) {
+              imageUrls.push(imageMatch[1]);
+            }
+            // 匹配 GitHub 自动上传的图片
+            const githubImagePattern = /https:\/\/user-images\.githubusercontent\.com\/[^\s\)]+/g;
+            const githubImages = body.match(githubImagePattern) || [];
+            imageUrls.push(...githubImages);
             
             if (!filePath) {
               console.error('No file path found');
@@ -67,11 +84,11 @@ jobs:
             }
             
             if (!newContent) {
-              console.error('No content found in markdown block');
+              console.error('No content found in code block');
               await github.rest.issues.createComment({
                 ...context.repo,
                 issue_number: context.issue.number,
-                body: '❌ Cannot find edited content. Please make sure to edit the content in the markdown code block.'
+                body: '❌ Cannot find edited content. Please make sure to edit the content in the markdown or yaml code block.'
               });
               core.setOutput('should_run', 'false');
               return;
@@ -79,28 +96,128 @@ jobs:
             
             console.log('✅ File path:', filePath);
             console.log('✅ New content length:', newContent.length);
+            console.log('✅ Is YAML file:', isYaml);
+            console.log('✅ Found images:', imageUrls.length);
             
             core.setOutput('filePath', filePath);
             core.setOutput('newContent', newContent);
+            core.setOutput('isYaml', isYaml ? 'true' : 'false');
+            core.setOutput('imageUrls', JSON.stringify(imageUrls));
             core.setOutput('should_run', 'true');
 
       - name: Checkout repository
         if: steps.parse.outputs.should_run == 'true'
         uses: actions/checkout@v4
 
+      - name: Download and save images
+        if: steps.parse.outputs.should_run == 'true' && steps.parse.outputs.imageUrls != '[]'
+        id: images
+        env:
+          IMAGE_URLS: ${{ steps.parse.outputs.imageUrls }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const https = require('https');
+            const http = require('http');
+            const { promisify } = require('util');
+            
+            const imageUrls = JSON.parse(process.env.IMAGE_URLS || '[]');
+            const savedImages = [];
+            
+            for (const imageUrl of imageUrls) {
+              try {
+                // 从URL提取文件名
+                const urlParts = imageUrl.split('/');
+                let fileName = urlParts[urlParts.length - 1].split('?')[0];
+                
+                // 如果没有扩展名，尝试从URL推断
+                if (!fileName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
+                  // 检查URL中是否有扩展名信息
+                  const urlExtMatch = imageUrl.match(/\.(jpg|jpeg|png|gif|svg|webp)/i);
+                  if (urlExtMatch) {
+                    fileName = `image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}${urlExtMatch[0]}`;
+                  } else {
+                    fileName = `image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.png`;
+                  }
+                }
+                
+                // 确定保存路径（assets/img/）
+                const saveDir = 'assets/img';
+                if (!fs.existsSync(saveDir)) {
+                  fs.mkdirSync(saveDir, { recursive: true });
+                }
+                
+                const savePath = path.join(saveDir, fileName);
+                
+                // 下载图片
+                const protocol = imageUrl.startsWith('https') ? https : http;
+                await new Promise((resolve, reject) => {
+                  const request = protocol.get(imageUrl, (response) => {
+                    if (response.statusCode === 200 || response.statusCode === 301 || response.statusCode === 302) {
+                      // 处理重定向
+                      if (response.statusCode === 301 || response.statusCode === 302) {
+                        const redirectUrl = response.headers.location;
+                        if (redirectUrl) {
+                          const redirectProtocol = redirectUrl.startsWith('https') ? https : http;
+                          redirectProtocol.get(redirectUrl, (redirectResponse) => {
+                            const fileStream = fs.createWriteStream(savePath);
+                            redirectResponse.pipe(fileStream);
+                            fileStream.on('finish', () => {
+                              fileStream.close();
+                              console.log(`✅ Downloaded: ${savePath}`);
+                              savedImages.push(`/${savePath}`);
+                              resolve();
+                            });
+                          }).on('error', reject);
+                          return;
+                        }
+                      }
+                      
+                      const fileStream = fs.createWriteStream(savePath);
+                      response.pipe(fileStream);
+                      fileStream.on('finish', () => {
+                        fileStream.close();
+                        console.log(`✅ Downloaded: ${savePath}`);
+                        savedImages.push(`/${savePath}`);
+                        resolve();
+                      });
+                    } else {
+                      reject(new Error(`Failed to download: ${response.statusCode}`));
+                    }
+                  });
+                  request.on('error', reject);
+                });
+              } catch (err) {
+                console.error(`❌ Failed to download ${imageUrl}:`, err.message);
+              }
+            }
+            
+            core.setOutput('saved_paths', JSON.stringify(savedImages));
+            core.setOutput('count', savedImages.length.toString());
+
       - name: Read original file and preserve front matter
         if: steps.parse.outputs.should_run == 'true'
         id: prepare
         env:
           FILE_PATH: ${{ steps.parse.outputs.filePath }}
+          IS_YAML: ${{ steps.parse.outputs.isYaml }}
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const filePath = process.env.FILE_PATH;
+            const isYaml = process.env.IS_YAML === 'true';
             
             if (!fs.existsSync(filePath)) {
               console.log('File not found:', filePath);
+              core.setOutput('has_frontmatter', 'false');
+              return;
+            }
+            
+            // YAML文件不需要处理front matter
+            if (isYaml) {
               core.setOutput('has_frontmatter', 'false');
               return;
             }
@@ -135,23 +252,37 @@ jobs:
           NEW_CONTENT: ${{ steps.parse.outputs.newContent }}
           HAS_FRONTMATTER: ${{ steps.prepare.outputs.has_frontmatter }}
           FRONTMATTER: ${{ steps.prepare.outputs.frontmatter }}
+          IS_YAML: ${{ steps.parse.outputs.isYaml }}
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const filePath = process.env.FILE_PATH;
             const newContent = process.env.NEW_CONTENT;
             const hasFrontmatter = process.env.HAS_FRONTMATTER === 'true';
             const frontmatter = process.env.FRONTMATTER || '';
+            const isYaml = process.env.IS_YAML === 'true';
             
             console.log('Debug info:');
             console.log('- File path:', filePath);
+            console.log('- Is YAML:', isYaml);
             console.log('- Has frontmatter:', hasFrontmatter);
             console.log('- Frontmatter length:', frontmatter.length);
             console.log('- New content length:', newContent.length);
             
+            // 确保目录存在
+            const dir = path.dirname(filePath);
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir, { recursive: true });
+            }
+            
             let finalContent;
-            if (hasFrontmatter && frontmatter.trim()) {
+            if (isYaml) {
+              // YAML文件直接使用新内容
+              finalContent = newContent;
+              console.log('✅ Writing YAML file');
+            } else if (hasFrontmatter && frontmatter.trim()) {
               // 保留 front matter
               finalContent = `---\n${frontmatter}\n---\n${newContent}`;
               console.log('✅ Preserved front matter');
@@ -175,6 +306,7 @@ jobs:
             
             **Changes:**
             - Updated `${{ steps.parse.outputs.filePath }}`
+            ${{ steps.images.outputs.count && steps.images.outputs.count != '0' && format('- Added {0} image(s) to assets/img/', steps.images.outputs.count) || '' }}
             
             Please review and merge if everything looks good.
             

@@ -61,9 +61,14 @@ jobs:
               return;
             }
             
+            // 判断文件类型
+            const isYaml = filePath && (filePath.endsWith('.yml') || filePath.endsWith('.yaml'));
+            
             console.log('✅ Parsed file path:', filePath);
+            console.log('✅ Is YAML file:', isYaml);
             core.setOutput('should_run', 'true');
             core.setOutput('filePath', filePath);
+            core.setOutput('isYaml', isYaml ? 'true' : 'false');
 
       - name: Checkout repository
         if: steps.check_and_parse.outputs.should_run == 'true'
@@ -71,14 +76,18 @@ jobs:
 
       - name: Read file content and update issue
         if: steps.check_and_parse.outputs.should_run == 'true'
+        env:
+          IS_YAML: ${{ steps.check_and_parse.outputs.isYaml }}
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const issue_number = context.issue.number;
             const filePath = '${{ steps.check_and_parse.outputs.filePath }}';
+            const isYaml = process.env.IS_YAML === 'true';
             
             console.log(`Attempting to read file: ${filePath}`);
+            console.log(`Is YAML file: ${isYaml}`);
             
             try {
               // 检查文件是否存在
@@ -89,30 +98,59 @@ jobs:
               let content = fs.readFileSync(filePath, 'utf8');
               console.log(`File read successfully, length: ${content.length} characters`);
               
-              // 去除 front matter (YAML front matter)
-              if (content.trim().startsWith('---')) {
-                const parts = content.split(/^---$/m);
-                if (parts.length >= 3) {
-                  // 跳过第一个空字符串和 front matter，保留正文
-                  content = parts.slice(2).join('---').trim();
-                  console.log('Removed front matter, remaining length:', content.length);
+              // 判断文件类型并处理
+              let codeBlockType = 'markdown';
+              
+              if (isYaml) {
+                // YAML文件不需要去除front matter，直接使用全部内容
+                codeBlockType = 'yaml';
+                console.log('✅ Processing as YAML file');
+              } else {
+                // Markdown文件：去除 front matter (YAML front matter)
+                if (content.trim().startsWith('---')) {
+                  const parts = content.split(/^---$/m);
+                  if (parts.length >= 3) {
+                    // 跳过第一个空字符串和 front matter，保留正文
+                    content = parts.slice(2).join('---').trim();
+                    console.log('Removed front matter, remaining length:', content.length);
+                  }
                 }
+                console.log('✅ Processing as Markdown file');
               }
               
               // 保留原有的 issue body，添加预填充内容
               const originalBody = context.payload.issue.body || '';
               const header = `\n\n---\n\n### 🧾 Prefilled Content from \`${filePath}\`\n\n`;
-              const prefilledContent = '```markdown\n' + content + '\n```\n\n';
-              const instructions = [
-                '> 📝 **How to edit:**',
-                '> 1. Click the **three dots (···)** in the top right corner',
-                '> 2. Select **"Edit"**',
-                '> 3. Edit the content in the code block above (between \\`\\`\\`markdown and \\`\\`\\`)',
-                '> 4. Click **"Update comment"** to save',
-                '> 5. The system will automatically create a Pull Request',
-                '',
-                '> ⚠️ **Important:** Only edit the content inside the code block, do not delete the \\`\\`\\`markdown markers!'
-              ].join('\n');
+              const prefilledContent = `\`\`\`${codeBlockType}\n` + content + '\n```\n\n';
+              
+              // 根据文件类型生成不同的说明
+              let instructions;
+              if (isYaml) {
+                instructions = [
+                  '> 📝 **How to edit:**',
+                  '> 1. Click the **three dots (···)** in the top right corner',
+                  '> 2. Select **"Edit"**',
+                  '> 3. Edit the YAML content in the code block above (between \\`\\`\\`yaml and \\`\\`\\`)',
+                  '> 4. To add images: drag and drop images into the comment box, or paste image URLs',
+                  '> 5. Click **"Update comment"** to save',
+                  '> 6. The system will automatically create a Pull Request with your changes',
+                  '',
+                  '> ⚠️ **Important:** Only edit the content inside the code block, do not delete the \\`\\`\\`yaml markers!',
+                  '> 📷 **Images:** Uploaded images will be automatically saved to `assets/img/` directory'
+                ].join('\n');
+              } else {
+                instructions = [
+                  '> 📝 **How to edit:**',
+                  '> 1. Click the **three dots (···)** in the top right corner',
+                  '> 2. Select **"Edit"**',
+                  '> 3. Edit the content in the code block above (between \\`\\`\\`markdown and \\`\\`\\`)',
+                  '> 4. Click **"Update comment"** to save',
+                  '> 5. The system will automatically create a Pull Request',
+                  '',
+                  '> ⚠️ **Important:** Only edit the content inside the code block, do not delete the \\`\\`\\`markdown markers!'
+                ].join('\n');
+              }
+              
               const newBody = originalBody + header + prefilledContent + instructions;
               
               await github.rest.issues.update({

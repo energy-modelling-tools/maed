@@ -3,12 +3,17 @@ description: "Edit an existing file from the repository"
 title: "Edit request: "
 labels: ["content-edit"]
 body:
-  - type: input
+  - type: dropdown
     id: file
     attributes:
       label: "Which file do you want to edit?"
-      description: "Example: about.markdown, application.markdown, etc."
-      placeholder: "about.markdown"
+      description: "Select a file to edit"
+      options:
+        - "about.markdown"
+        - "application.markdown"
+        - "dataset.markdown"
+        - "get_involved.markdown"
+        - "learning_capacity.markdown"
     validations:
       required: true
   - type: textarea
