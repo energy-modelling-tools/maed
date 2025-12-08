@@ -23,8 +23,16 @@ jobs:
             
             // Check if this is a yml-edit issue
             const hasYmlEdit = labelNames.includes('yml-edit');
+            const hasUpload = labelNames.includes('upload');
             const body = context.payload.issue.body || '';
             console.log('Full issue body:', body);
+            
+            // Skip upload issues - they are handled by issue-upload-image.yml
+            if (hasUpload) {
+              console.log('Skipping: this is an upload issue, handled by issue-upload-image.yml');
+              core.setOutput('should_run', 'false');
+              return;
+            }
             
             const hasYamlFileField = body.includes('Which YAML file do you want to edit');
             

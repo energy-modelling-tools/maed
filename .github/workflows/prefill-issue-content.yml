@@ -24,8 +24,16 @@ jobs:
             // Check if the issue has content-edit label (Markdown files only)
             const hasContentEdit = labelNames.includes('content-edit');
             const hasYmlEdit = labelNames.includes('yml-edit');
+            const hasUpload = labelNames.includes('upload');
             const body = context.payload.issue.body || '';
             console.log('Full issue body:', body);
+            
+            // Skip upload issues - they are handled by issue-upload-image.yml
+            if (hasUpload) {
+              console.log('Skipping: this is an upload issue, handled by issue-upload-image.yml');
+              core.setOutput('should_run', 'false');
+              return;
+            }
             
             // Skip yml-edit issues - they are handled by prefill-yml-content.yml
             if (hasYmlEdit || body.includes('Which YAML file do you want to edit')) {
