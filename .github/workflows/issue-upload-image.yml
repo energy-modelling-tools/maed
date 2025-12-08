@@ -145,23 +145,27 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           TARGET_PATH: ${{ steps.extract.outputs.targetPath }}
 
-      - name: Commit and push changes
-        run: |
-          if [ ! -s uploaded_files.txt ]; then
-            echo "No files downloaded. Skipping commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ${{ steps.extract.outputs.targetPath }}
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git commit -m "Uploaded assets from issue #${{ github.event.issue.number }}"
-          git push
+      - name: Create Pull Request
+        if: steps.extract.outputs.items != '[]'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Upload images from issue #${{ github.event.issue.number }}"
+          title: "Upload images from issue #${{ github.event.issue.number }}"
+          body: |
+            This PR was automatically created from issue #${{ github.event.issue.number }}.
+            
+            **Uploaded files:**
+            Target path: `${{ steps.extract.outputs.targetPath }}`
+            
+            Please review and merge if everything looks good.
+            
+            ---
+            Related to #${{ github.event.issue.number }}
+          branch: "upload-images-issue-${{ github.event.issue.number }}"
+          delete-branch: true
+          labels: upload-image
 
-      - name: Comment on issue and close it
+      - name: Comment on issue
         if: success() && steps.extract.outputs.items != '[]'
         uses: actions/github-script@v7
         with:
@@ -175,7 +179,8 @@ jobs:
                 .split('\n')
                 .filter(Boolean);
               if (lines.length > 0) {
-                msg = '✅ Your attachments have been saved into the repository.\n\nSaved files:\n' + lines.map(p => '- `' + p + '`').join('\n');
+                msg = '✅ A Pull Request has been created with your uploaded images.\n\nUploaded files:\n' + lines.map(p => '- `' + p + '`').join('\n');
+                msg += '\n\nPlease review the PR and merge it when ready.';
               } else {
                 msg = '⚠️ No files were saved. Please check if the image URLs are valid.';
               }
@@ -188,20 +193,6 @@ jobs:
               issue_number: context.issue.number,
               body: msg
             });
-
-            // Only close if files were actually saved
-            if (fs.existsSync('uploaded_files.txt')) {
-              const lines = fs.readFileSync('uploaded_files.txt', 'utf8')
-                .split('\n')
-                .filter(Boolean);
-              if (lines.length > 0) {
-                await github.rest.issues.update({
-                  ...context.repo,
-                  issue_number: context.issue.number,
-                  state: 'closed'
-                });
-              }
-            }
 
       - name: Comment on failure
         if: failure()
