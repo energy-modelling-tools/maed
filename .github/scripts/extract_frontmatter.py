@@ -10,7 +10,7 @@ if not path.exists():
 
 text = path.read_text(encoding="utf-8")
 
-# 匹配 front matter 块
+# Match front matter block
 m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
 if m:
     print(m.group(1))

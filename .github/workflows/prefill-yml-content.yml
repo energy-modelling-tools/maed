@@ -1,0 +1,134 @@
+name: Prefill YAML Issue Content from Repo
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prefill-yml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check label and parse YAML file
+        id: check_and_parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = context.payload.issue.labels || [];
+            const labelNames = labels.map(l => l.name);
+            console.log('Issue labels:', labelNames);
+            
+            // Check if this is a yml-edit issue
+            const hasYmlEdit = labelNames.includes('yml-edit');
+            const body = context.payload.issue.body || '';
+            console.log('Full issue body:', body);
+            
+            const hasYamlFileField = body.includes('Which YAML file do you want to edit');
+            
+            if (!hasYmlEdit && !hasYamlFileField) {
+              console.log('Skipping: no yml-edit label and no YAML file field in body');
+              core.setOutput('should_run', 'false');
+              return;
+            }
+            
+            // Extract YAML file path from issue body
+            // GitHub forms format might be: ### Which YAML file do you want to edit?\n\nvalue\n
+            let filePath = null;
+            
+            // Try multiple matching patterns
+            const patterns = [
+              /###\s*Which YAML file do you want to edit\?\s*\n\s*([^\n]+)/i,
+              /###\s*Which YAML file do you want to edit\?\s*\n\n\s*([^\n]+)/i,
+              /Which YAML file do you want to edit[?？]\s*\n\s*([^\n]+)/i,
+              /Which YAML file do you want to edit[?？]\s*\n\n\s*([^\n]+)/i
+            ];
+            
+            for (const pattern of patterns) {
+              const match = body.match(pattern);
+              if (match && match[1]) {
+                filePath = match[1].trim();
+                // Ensure it's a YAML file
+                if (filePath.endsWith('.yml') || filePath.endsWith('.yaml')) {
+                  break;
+                }
+              }
+            }
+            
+            if (!filePath) {
+              console.error('No YAML file path found in issue body');
+              console.log('Body content:', JSON.stringify(body));
+              core.setOutput('should_run', 'false');
+              return;
+            }
+            
+            console.log('✅ Parsed YAML file path:', filePath);
+            core.setOutput('should_run', 'true');
+            core.setOutput('filePath', filePath);
+
+      - name: Checkout repository
+        if: steps.check_and_parse.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Read YAML file content and update issue
+        if: steps.check_and_parse.outputs.should_run == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const issue_number = context.issue.number;
+            const filePath = '${{ steps.check_and_parse.outputs.filePath }}';
+            
+            console.log(`Attempting to read YAML file: ${filePath}`);
+            
+            try {
+              // Check if the file exists
+              if (!fs.existsSync(filePath)) {
+                throw new Error(`File not found: ${filePath}`);
+              }
+              
+              let content = fs.readFileSync(filePath, 'utf8');
+              console.log(`YAML file read successfully, length: ${content.length} characters`);
+              
+              // YAML files don't need front matter removal, use all content directly
+              
+              // Preserve the original issue body and add prefilled content
+              const originalBody = context.payload.issue.body || '';
+              const header = `\n\n---\n\n### 🧾 Prefilled YAML Content from \`${filePath}\`\n\n`;
+              const prefilledContent = '```yaml\n' + content + '\n```\n\n';
+              
+              const instructions = [
+                '> 📝 **How to edit:**',
+                '> 1. Click the **three dots (···)** in the top right corner',
+                '> 2. Select **"Edit"**',
+                '> 3. Edit the YAML content in the code block above (between \\`\\`\\`yaml and \\`\\`\\`)',
+                '> 4. To add images: drag and drop images into the comment box, or paste image URLs',
+                '> 5. Click **"Update comment"** to save',
+                '> 6. The system will automatically create a Pull Request with your changes',
+                '',
+                '> ⚠️ **Important:** Only edit the content inside the code block, do not delete the \\`\\`\\`yaml markers!',
+                '> 📷 **Images:** Uploaded images will be automatically saved to `assets/img/` directory'
+              ].join('\n');
+              
+              const newBody = originalBody + header + prefilledContent + instructions;
+              
+              await github.rest.issues.update({
+                ...context.repo,
+                issue_number,
+                body: newBody
+              });
+              
+              console.log(`✅ Updated issue #${issue_number} with YAML content from ${filePath}`);
+            } catch (err) {
+              console.error(`❌ Failed to read YAML file: ${filePath}`, err);
+              const originalBody = context.payload.issue.body || '';
+              const failBody = originalBody + `\n\n---\n\n⚠️ Unable to find or read YAML file: \`${filePath}\`\n\nError: ${err.message}`;
+              await github.rest.issues.update({
+                ...context.repo,
+                issue_number,
+                body: failBody
+              });
+            }
+

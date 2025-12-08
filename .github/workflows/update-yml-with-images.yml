@@ -1,4 +1,4 @@
-name: Convert Issue to PR
+name: Update YAML File with Images
 
 on:
   issues:
@@ -10,10 +10,10 @@ permissions:
   issues: write
 
 jobs:
-  create-pr:
+  update-yml:
     runs-on: ubuntu-latest
     steps:
-      - name: Check and parse issue
+      - name: Check and parse YAML issue
         id: parse
         uses: actions/github-script@v7
         with:
@@ -25,28 +25,21 @@ jobs:
             const body = context.payload.issue.body || '';
             console.log('Issue body length:', body.length);
             
-            // check if the issue is a content-edit issue (Markdown files only)
-            const hasContentEdit = labelNames.includes('content-edit');
+            // Check if this is a yml-edit issue
             const hasYmlEdit = labelNames.includes('yml-edit');
-            const hasFileField = body.includes('Which file do you want to edit');
+            const hasYamlFileField = body.includes('Which YAML file do you want to edit');
             
-            // Skip yml-edit issues - they are handled by update-yml-with-images.yml
-            if (hasYmlEdit || body.includes('Which YAML file do you want to edit')) {
-              console.log('Skipping: this is a yml-edit issue, handled by update-yml-with-images.yml');
+            if (!hasYmlEdit && !hasYamlFileField) {
+              console.log('Skipping: not a yml-edit issue');
               core.setOutput('should_run', 'false');
               return;
             }
             
-            if (!hasContentEdit && !hasFileField) {
-              console.log('Skipping: not a content-edit issue');
-              core.setOutput('should_run', 'false');
-              return;
-            }
-            
-            // extract the file path (Markdown files only)
+            // Extract YAML file path
             const filePatterns = [
-              /###\s*Which file do you want to edit\?\s*\n\s*([^\n]+)/i,
-              /###\s*Which file do you want to edit\?\s*\n\n\s*([^\n]+)/i,
+              /###\s*Which YAML file do you want to edit\?\s*\n\s*([^\n]+)/i,
+              /###\s*Which YAML file do you want to edit\?\s*\n\n\s*([^\n]+)/i,
+              /Prefilled YAML Content from `([^`]+)`/i,
               /Prefilled Content from `([^`]+)`/i
             ];
             
@@ -55,18 +48,21 @@ jobs:
               const match = body.match(pattern);
               if (match && match[1]) {
                 filePath = match[1].trim();
-                break;
+                // Ensure it's a YAML file
+                if (filePath.endsWith('.yml') || filePath.endsWith('.yaml')) {
+                  break;
+                }
               }
             }
             
-            // extract the edited content (Markdown only)
-            const markdownMatch = body.match(/```markdown\s*\n([\s\S]*?)\n```/);
-            const newContent = markdownMatch ? markdownMatch[1] : null;
+            // Extract YAML content from the code block or YAML Content field
+            const yamlMatch = body.match(/```yaml\s*\n([\s\S]*?)\n```/);
+            // Also check for YAML content in the YAML Content field from the form
+            const yamlContentFieldMatch = body.match(/###\s*YAML Content\s*\n\s*```yaml\s*\n([\s\S]*?)\n```/i) || 
+                                         body.match(/###\s*YAML Content\s*\n\n\s*```yaml\s*\n([\s\S]*?)\n```/i);
+            const newContent = yamlMatch ? yamlMatch[1] : (yamlContentFieldMatch ? yamlContentFieldMatch[1].trim() : null);
             
-            // This workflow only handles Markdown files
-            const isYaml = false;
-            
-            // extract the image URLs (from the issue's images)
+            // Extract image URLs from the issue
             const imageUrls = [];
             // Match Markdown image format: ![alt](url)
             const imagePattern = /!\[.*?\]\((https?:\/\/[^\s\)]+\.(jpg|jpeg|png|gif|svg|webp))\)/gi;
@@ -74,49 +70,48 @@ jobs:
             while ((imageMatch = imagePattern.exec(body)) !== null) {
               imageUrls.push(imageMatch[1]);
             }
-            // match the GitHub automatically uploaded images
+            // Match GitHub automatically uploaded images
             const githubImagePattern = /https:\/\/user-images\.githubusercontent\.com\/[^\s\)]+/g;
             const githubImages = body.match(githubImagePattern) || [];
             imageUrls.push(...githubImages);
             
             if (!filePath) {
-              console.error('No file path found');
+              console.error('No YAML file path found');
               await github.rest.issues.createComment({
                 ...context.repo,
                 issue_number: context.issue.number,
-                body: '❌ Cannot find file path in issue. Please make sure the format is correct.'
+                body: '❌ Cannot find YAML file path in issue. Please make sure the format is correct.'
               });
               core.setOutput('should_run', 'false');
               return;
             }
             
             if (!newContent) {
-              console.error('No content found in markdown code block');
+              console.error('No YAML content found');
               await github.rest.issues.createComment({
                 ...context.repo,
                 issue_number: context.issue.number,
-                body: '❌ Cannot find edited content. Please make sure to edit the content in the markdown code block.'
+                body: '❌ Cannot find YAML content. Please make sure to edit the content in the yaml code block.'
               });
               core.setOutput('should_run', 'false');
               return;
             }
             
-            console.log('✅ File path:', filePath);
-            console.log('✅ New content length:', newContent.length);
-            console.log('✅ Processing as Markdown file');
+            console.log('✅ YAML file path:', filePath);
+            console.log('✅ YAML content length:', newContent.length);
+            console.log('✅ Found images:', imageUrls.length);
             
             core.setOutput('filePath', filePath);
-            core.setOutput('newContent', newContent);
-            core.setOutput('isYaml', 'false');
-            core.setOutput('imageUrls', JSON.stringify([]));
+            core.setOutput('yamlContent', newContent);
+            core.setOutput('imageUrls', JSON.stringify(imageUrls));
             core.setOutput('should_run', 'true');
 
       - name: Checkout repository
         if: steps.parse.outputs.should_run == 'true'
         uses: actions/checkout@v4
 
-      - name: Download and save images (Markdown files don't support image uploads)
-        if: false
+      - name: Download and save images
+        if: steps.parse.outputs.should_run == 'true' && steps.parse.outputs.imageUrls != '[]'
         id: images
         env:
           IMAGE_URLS: ${{ steps.parse.outputs.imageUrls }}
@@ -127,20 +122,19 @@ jobs:
             const path = require('path');
             const https = require('https');
             const http = require('http');
-            const { promisify } = require('util');
             
             const imageUrls = JSON.parse(process.env.IMAGE_URLS || '[]');
             const savedImages = [];
             
             for (const imageUrl of imageUrls) {
               try {
-                // extract the file name from the URL
+                // Extract the file name from the URL
                 const urlParts = imageUrl.split('/');
                 let fileName = urlParts[urlParts.length - 1].split('?')[0];
                 
-                // if there is no extension, try to infer the extension from the URL
+                // If there is no extension, try to infer the extension from the URL
                 if (!fileName.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
-                  // check if the URL has extension information
+                  // Check if the URL has extension information
                   const urlExtMatch = imageUrl.match(/\.(jpg|jpeg|png|gif|svg|webp)/i);
                   if (urlExtMatch) {
                     fileName = `image_${Date.now()}_${Math.random().toString(36).substr(2, 9)}${urlExtMatch[0]}`;
@@ -149,7 +143,7 @@ jobs:
                   }
                 }
                 
-                // determine the save path (assets/img/)
+                // Determine the save path (assets/img/)
                 const saveDir = 'assets/img';
                 if (!fs.existsSync(saveDir)) {
                   fs.mkdirSync(saveDir, { recursive: true });
@@ -157,12 +151,12 @@ jobs:
                 
                 const savePath = path.join(saveDir, fileName);
                 
-                // download the image
+                // Download the image
                 const protocol = imageUrl.startsWith('https') ? https : http;
                 await new Promise((resolve, reject) => {
                   const request = protocol.get(imageUrl, (response) => {
                     if (response.statusCode === 200 || response.statusCode === 301 || response.statusCode === 302) {
-                      // handle the redirection
+                      // Handle the redirection
                       if (response.statusCode === 301 || response.statusCode === 302) {
                         const redirectUrl = response.headers.location;
                         if (redirectUrl) {
@@ -203,79 +197,18 @@ jobs:
             core.setOutput('saved_paths', JSON.stringify(savedImages));
             core.setOutput('count', savedImages.length.toString());
 
-      - name: Read original file and preserve front matter
-        if: steps.parse.outputs.should_run == 'true'
-        id: prepare
-        env:
-          FILE_PATH: ${{ steps.parse.outputs.filePath }}
-          IS_YAML: ${{ steps.parse.outputs.isYaml }}
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const filePath = process.env.FILE_PATH;
-            const isYaml = process.env.IS_YAML === 'true';
-            
-            if (!fs.existsSync(filePath)) {
-              console.log('File not found:', filePath);
-              core.setOutput('has_frontmatter', 'false');
-              return;
-            }
-            
-            // YAML files don't need front matter processing
-            if (isYaml) {
-              core.setOutput('has_frontmatter', 'false');
-              return;
-            }
-            
-            const content = fs.readFileSync(filePath, 'utf8');
-            
-            // Check if the file has front matter
-            // Front matter format: ---\nkey: value\n---\n
-            if (content.startsWith('---\n')) {
-              // Find the position of the second ---
-              const secondDashIndex = content.indexOf('\n---\n', 4);
-              if (secondDashIndex > 0) {
-                // Extract front matter (excluding the opening and closing ---)
-                const frontmatter = content.substring(4, secondDashIndex);
-                core.setOutput('has_frontmatter', 'true');
-                core.setOutput('frontmatter', frontmatter);
-                console.log('✅ Found front matter, length:', frontmatter.length);
-                console.log('Front matter preview:', frontmatter.substring(0, 100));
-              } else {
-                console.log('⚠️ Found opening --- but no closing ---');
-                core.setOutput('has_frontmatter', 'false');
-              }
-            } else {
-              console.log('⚠️ File does not start with ---');
-              core.setOutput('has_frontmatter', 'false');
-            }
-
-      - name: Create new file content
+      - name: Update YAML file
         if: steps.parse.outputs.should_run == 'true'
         env:
           FILE_PATH: ${{ steps.parse.outputs.filePath }}
-          NEW_CONTENT: ${{ steps.parse.outputs.newContent }}
-          HAS_FRONTMATTER: ${{ steps.prepare.outputs.has_frontmatter }}
-          FRONTMATTER: ${{ steps.prepare.outputs.frontmatter }}
-          IS_YAML: ${{ steps.parse.outputs.isYaml }}
+          YAML_CONTENT: ${{ steps.parse.outputs.yamlContent }}
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
             const filePath = process.env.FILE_PATH;
-            const newContent = process.env.NEW_CONTENT;
-            const hasFrontmatter = process.env.HAS_FRONTMATTER === 'true';
-            const frontmatter = process.env.FRONTMATTER || '';
-            const isYaml = process.env.IS_YAML === 'true';
-            
-            console.log('Debug info:');
-            console.log('- File path:', filePath);
-            console.log('- Is YAML:', isYaml);
-            console.log('- Has frontmatter:', hasFrontmatter);
-            console.log('- Frontmatter length:', frontmatter.length);
-            console.log('- New content length:', newContent.length);
+            const yamlContent = process.env.YAML_CONTENT;
             
             // Ensure the directory exists
             const dir = path.dirname(filePath);
@@ -283,20 +216,9 @@ jobs:
               fs.mkdirSync(dir, { recursive: true });
             }
             
-            let finalContent;
-            // This workflow only handles Markdown files
-            if (hasFrontmatter && frontmatter.trim()) {
-              // Preserve front matter
-              finalContent = `---\n${frontmatter}\n---\n${newContent}`;
-              console.log('✅ Preserved front matter');
-            } else {
-              // No front matter
-              finalContent = newContent;
-              console.log('⚠️ No front matter to preserve');
-            }
-            
-            fs.writeFileSync(filePath, finalContent, 'utf8');
-            console.log(`✅ File updated: ${filePath}`);
+            // Write YAML content directly (no front matter processing needed)
+            fs.writeFileSync(filePath, yamlContent, 'utf8');
+            console.log(`✅ YAML file updated: ${filePath}`);
 
       - name: Create Pull Request
         if: steps.parse.outputs.should_run == 'true'
@@ -309,12 +231,13 @@ jobs:
             
             **Changes:**
             - Updated `${{ steps.parse.outputs.filePath }}`
+            ${{ steps.images.outputs.count && steps.images.outputs.count != '0' && format('- Added {0} image(s) to assets/img/', steps.images.outputs.count) || '' }}
             
             Please review and merge if everything looks good.
             
             ---
             Closes #${{ github.event.issue.number }}
-          branch: "content-edit-issue-${{ github.event.issue.number }}"
+          branch: "yml-edit-issue-${{ github.event.issue.number }}"
           delete-branch: true
-          labels: content-edit
+          labels: yml-edit
 
