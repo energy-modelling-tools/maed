@@ -1,7 +1,7 @@
 # Demo site that consumes the shared page-template theme
 title: "MAED 2 (demo)"
 description: "Demo site using the shared page-template"
-baseurl: "/maed2.github.io"
+baseurl: "/maed.github.io"
 url: ""
 
 # Correctly point to the remote theme repository
