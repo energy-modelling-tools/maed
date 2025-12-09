@@ -9,6 +9,7 @@ remote_theme: ccg-pages/page-template@main
 markdown: kramdown
 theme: null
 plugins:
+  - jekyll-theme-primer
   - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-avatar
