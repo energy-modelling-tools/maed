@@ -79,6 +79,6 @@ plugins:
 sass:
   style: :compressed
   sass_dir: assets/css/
-  load_paths:
-    - node_modules/
-    - node_modules/@primer/view-components/app/components/
+  # load_paths:
+  #   - node_modules/
+  #   - node_modules/@primer/view-components/app/components/
