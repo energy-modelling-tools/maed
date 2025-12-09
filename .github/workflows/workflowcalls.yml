@@ -1,0 +1,61 @@
+name: Central Workflow Sync
+
+# Trigger this workflow when issues are opened, edited, or labeled
+# This passes the event to the reusable workflows in the .github repo
+on:
+  issues:
+    types: [opened, edited, labeled]
+  pull_request:
+    types: [closed]
+
+jobs:
+  # 1. Prefill Markdown Content (on Issue Open)
+  prefill-markdown:
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    uses: ccg-pages/.github/.github/workflows/prefill-issue-content.yml@main
+    permissions:
+      contents: read
+      issues: write
+
+  # 2. Prefill YAML Content (on Issue Open)
+  prefill-yaml:
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    uses: ccg-pages/.github/.github/workflows/prefill-yml-content.yml@main
+    permissions:
+      contents: read
+      issues: write
+
+  # 3. Handle Content Edits (Markdown) (on Issue Edit)
+  handle-content-edit:
+    if: github.event_name == 'issues' && github.event.action == 'edited'
+    uses: ccg-pages/.github/.github/workflows/issue-to-pr.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+  # 4. Handle YAML Edits (on Issue Edit)
+  handle-yaml-edit:
+    if: github.event_name == 'issues' && github.event.action == 'edited'
+    uses: ccg-pages/.github/.github/workflows/update-yml-with-images.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+  # 5. Handle Image Uploads (on Issue Open/Edit/Label)
+  handle-upload:
+    uses: ccg-pages/.github/.github/workflows/issue-upload-image.yml@main
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+  # 6. Cleanup after PR Close
+  cleanup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    uses: ccg-pages/.github/.github/workflows/pr-close-cleanup.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
