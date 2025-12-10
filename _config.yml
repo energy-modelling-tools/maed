@@ -5,7 +5,7 @@ baseurl: "/maed"
 url: ""
 
 # Correctly point to the remote theme repository
-remote_theme: ccg-pages/page-template@main
+remote_theme: energy-modeling-tools/page-template@main
 
 markdown: kramdown
 theme: null
