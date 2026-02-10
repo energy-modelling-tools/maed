@@ -1,8 +1,10 @@
 # Demo site that consumes the shared page-template theme
 title: "MAED"
+logo: "/assets/img/MAED_Logo.png"
 description: "Demo site using the shared page-template"
 baseurl: "/maed"
 url: ""
+forum_slug: "maed"
 
 # Correctly point to the remote theme repository
 remote_theme: energy-modeling-tools/page-template@main
