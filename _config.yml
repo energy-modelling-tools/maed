@@ -7,7 +7,7 @@ url: ""
 forum_slug: "maed"
 
 # Correctly point to the remote theme repository
-remote_theme: energy-modeling-tools/page-template@main
+remote_theme: energy-modelling-tools/page-template@main
 
 markdown: kramdown
 theme: null
