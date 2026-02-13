@@ -1,6 +1,6 @@
 # Demo site that consumes the shared page-template theme
 title: "MAED"
-logo: "/assets/img/MAED_Logo.png"
+logo: "/assets/img/logos/MAED.svg"
 description: "Demo site using the shared page-template"
 baseurl: "/maed"
 url: ""
