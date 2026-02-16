@@ -12,35 +12,35 @@ permalink: /learning_capacity/
     <h2 class="alt-h2 mb-4">Learning & Capacity Building</h2>
   </div>
     <div class="mt-3 animate-in">
-      <h3 class="alt-h3 mt-3 animate-in" style="font-size: 1.25rem;">
-        <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="text-dark font-weight-bold" style="text-decoration: none;">
+      <h3 class="alt-h3 mt-3 animate-in">
+        <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="text-dark font-weight-bold">
           <strong>📘 Open University Course on Energy Demand Projections with MAED (Model for Analysis of Energy Demand)</strong>
         </a>
       </h3>
-      <p class="animate-in" style="font-size: 0.95rem;"> This course provides an introduction to the MAED methodology and hands on experience using the user interface, calibrating a model, and running scenarios.</p>
+      <p class="animate-in"> This course provides an introduction to the MAED methodology and hands on experience using the user interface, calibrating a model, and running scenarios.</p>
       <p class="animate-in">
         <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="btn btn-outline-light">Access Here →</a>
       </p>
     </div>
 
   <div class="mt-3 animate-in">
-      <h3 class="alt-h3 mt-3 animate-in" style="font-size: 1.25rem;">
+      <h3 class="alt-h3 mt-3 animate-in">
       <a href="https://github.com/Model-for-Analysis-of-Energy-Demand/MAED-UI" class="text-dark font-weight-bold">
           <strong>MAED II User Interface</strong>
         </a>
       </h3>
-      <p class="animate-in" style="font-size: 0.95rem;"> Download the dedicated user interface for MAED here. It provides a single space to input data, run the model, and visualize results. </p>
+      <p class="animate-in"> Download the dedicated user interface for MAED here. It provides a single space to input data, run the model, and visualize results. </p>
       <p class="animate-in">
         <a href=" https://github.com/Model-for-Analysis-of-Energy-Demand/MAED-UI" class="btn btn-outline-light">Access Here →</a>
       </p>
     </div>
     <div class="mt-3 animate-in">
-      <h3 class="alt-h3 mt-3 animate-in" style="font-size: 1.25rem;">
-        <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="text-dark font-weight-bold" style="text-decoration: none;">
+      <h3 class="alt-h3 mt-3 animate-in">
+        <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="text-dark font-weight-bold">
           <strong>🌍 Energy Modelling Platforms (EMPs)</strong>
         </a>
       </h3>
-      <p class="animate-in" style="font-size: 0.95rem;">By offering training to professionals from the Global South, the Energy Modelling Platforms (EMPs) enable these countries to gather critical data, perform independent analyses, and develop credible investment proposals for clean energy infrastructure projects. EMPs play a vital role in what we refer to as local capacity building.</p>
+      <p class="animate-in">By offering training to professionals from the Global South, the Energy Modelling Platforms (EMPs) enable these countries to gather critical data, perform independent analyses, and develop credible investment proposals for clean energy infrastructure projects. EMPs play a vital role in what we refer to as local capacity building.</p>
       <p class="animate-in">
         <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="btn btn-outline-light">Learn more →</a>
       </p>
@@ -48,7 +48,7 @@ permalink: /learning_capacity/
 
 
     <div class="container-lg p-responsive py-4 py-md-6 my-lg-6 animate-in">
-      <h3 class="alt-h3 text-center mb-3 animate-in" style="font-size: 1.25rem;">🌍 Explore EMP Events</h3>
+      <h3 class="alt-h3 text-center mb-3 animate-in">🌍 Explore EMP Events</h3>
       
       <div class="clearfix gutter-spacious">
         {% for event in site.data.learning_events.events %}
@@ -86,8 +86,8 @@ permalink: /learning_capacity/
     </div>
 
 <!--
-    <h3 class="alt-h3 mt-3 animate-in" style="font-size: 1.25rem;">🛠️ Flatpack Program</h3>
-    <p class="animate-in" style="font-size: 0.95rem;">Content to be updated soon.</p>
+    <h3 class="alt-h3 mt-3 animate-in">🛠️ Flatpack Program</h3>
+    <p class="animate-in">Content to be updated soon.</p>
   
   -->
   </div>
