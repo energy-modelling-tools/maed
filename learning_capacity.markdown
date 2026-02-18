@@ -46,6 +46,13 @@ permalink: /learning_capacity/
       </p>
     </div>
 
+    <div class="mt-3 animate-in">
+      <h3 class="alt-h3 mt-3 animate-in">🛠️ Flatpack Program</h3>
+      <p class="animate-in text-justify">MAED Teaching Kit provides learning materials for an introductory course on using the MAED tool to build and analyse energy demand case studies. It includes editable lecture slides, hands-on exercises, sample learning objectives, and a suggested course timetable.</p>
+      <p class="animate-in">
+        <a href="https://curriculum.climatecompatiblegrowth.com/courses/cdf06a65-0033-4c0e-a5a0-504ceaa96bc2" target="_blank" class="btn btn-outline-primary sky-blue-accent d-block d-sm-inline-block px-1 px-md-3">Open Teaching Kit →</a>
+      </p>
+    </div>
 
     <div class="container-lg p-responsive py-4 py-md-6 my-lg-6 animate-in">
       <h3 class="alt-h3 text-center mb-3 animate-in">🌍 Explore EMP Events</h3>
@@ -85,11 +92,6 @@ permalink: /learning_capacity/
       </div>
     </div>
 
-<!--
-    <h3 class="alt-h3 mt-3 animate-in">🛠️ Flatpack Program</h3>
-    <p class="animate-in">Content to be updated soon.</p>
-  
-  -->
   </div>
 </section>
 
