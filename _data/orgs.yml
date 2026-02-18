@@ -1,10 +1,10 @@
 # Partner institutions for homepage display
 partners:
   - name: International Atomic Energy Agency (IAEA)
-    logo: /assets/img/partners/iaea.png
+    logo: /assets/img/partners/international_atomic_energy_agency_iaea.svg
     display_name: IAEA
     url: https://www.iaea.org/
   - name: Climate Compatible Growth (CCG)
-    logo: /assets/img/partners/CCG.jpg
+    logo: /assets/img/partners/climate_compatible_growth_ccg.svg
     display_name: CCG
     url: https://www.climatecompatiblegrowth.com/
