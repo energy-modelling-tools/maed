@@ -36,16 +36,6 @@ events:
         title: "MAED-Driven Energy Planning for Residential Water Heating in South Africa: A Training Exercise"
         url: "https://zenodo.org/records/13365233"
  
-  - title: "Test Event - UK"
-    image: "../assets/img/EMP/test_image.jpg"
-    alt: "Test image"
-    description: "This is a test image."
-    outputs:
-      - country: "Test event"
-        flag: "T"
-        title: "Output tile"
-        url: "google.com"
-
   - title: "EMP-A 2024 - Accra, Ghana"
     image: "../assets/img/EMP/EMP-A-2024.jpg"
     alt: "EMP-A 2024"
