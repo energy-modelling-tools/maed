@@ -10,20 +10,25 @@ permalink: /applications/
   </div>
 
   <div class="applications-content text-left">
+    <!-- CMS:section id=app_intro -->
     <p class="lead mb-4">MAED is a fundamental building block for a wide range of applications across government, industry, and academia. Several examples include: </p>
+    <!-- /CMS:section -->
 
      <div class="applications-grid">
       <div class="application-category">
         <h3 class="category-title">Governments</h3>
+        <!-- CMS:section id=app_governments -->
         <ul class="application-list">
           <li><a href=" https://www-pub.iaea.org/MTCD/publications/PDF/Pub1328_web.pdf ">Cuba: A Country Profile on Sustainable Energy Development</a></li>
           <li><a href="https://www-pub.iaea.org/MTCD/Publications/PDF/P1847_web.pdf">Adaptation Options for Nuclear and Other Energy Infrastructure to Long Term Climate Change in Pakistan</a></li> 
           <li><a href="https://www.iaea.org/publications/6970/energy-supply-options-for-lithuania">Energy supply options for Lithuania</a></li>
-        </ul>  
+        </ul>
+        <!-- /CMS:section -->  
       </div>
 
       <div class="application-category">
         <h3 class="category-title">Academia</h3>
+        <!-- CMS:section id=app_academia -->
         <ul class="application-list">
         <li><a href="https://www.sciencedirect.com/science/article/pii/S0360544210003245?via%3Dihub#sec5" target="_blank">An analytical method for the measurement of energy system sustainability in urban areas</a></li>
         <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S030142150500025X" target="_blank">Analysis of the Syrian long-term energy and electricity demand projection using the end-use methodology</a></li>
@@ -33,6 +38,7 @@ permalink: /applications/
         <li><a href="https://www.mdpi.com/1996-1073/16/17/6291" target="_blank">Energy Demand Modeling for the Transition of a Coal-Dependent City to a Low-Carbon City: The Case of Ulaanbaatar City</a></li>
         <li><a href="https://www.jstage.jst.go.jp/article/jjser/41/5/41_149/_article" target="_blank">Energy Demand Modelling for Developing Economies Using MAED-2 with Sectoral Decomposition: Bangladesh Case Study</a></li>
   </ul>
+        <!-- /CMS:section -->
 
         </ul>
       </div>
@@ -43,7 +49,9 @@ permalink: /applications/
  <section class="container-lg p-responsive py-4 py-md-6 my-lg-6">
   <div class="text-center mb-5">
      <h2 class="alt-h2">Specialist Applications</h2>
+    <!-- CMS:section id=app_specialist_intro -->
     <p class="text-center mt-2">The following studies utilize modified versions of MAED to capture specific characteristics or extend its analytical capabilities:</p>
+    <!-- /CMS:section -->
   </div>
 
   <div class="slider-wrapper my-5">
@@ -53,17 +61,23 @@ permalink: /applications/
       <div class="slider" id="textSlider">
         <div class="slide-card">
           <h3>Interactive Energy Demand Analysis: The MAED-BI Model</h3>
+          <!-- CMS:section id=app_specialist_shanxi -->
           <p><a href="https://pure.iiasa.ac.at/id/eprint/3356/" target="_blank">Application in the Shanxi Province, PRC</a></p>
+          <!-- /CMS:section -->
         </div>
 
         <div class="slide-card">
           <h3>Positive Energy Districts in Vienna</h3>
+          <!-- CMS:section id=app_specialist_vienna -->
           <p><a href="https://www.mdpi.com/1996-1073/14/15/4449" target="_blank">Feasibility analysis using bottom-up district energy modelling</a></p>
+          <!-- /CMS:section -->
         </div>
 
         <div class="slide-card">
           <h3>Energy Saving Measures and GHG Reduction in Croatia</h3>
+          <!-- CMS:section id=app_specialist_croatia -->
           <p><a href="https://www.sciencedirect.com/science/article/pii/S0360544214007440#sec2" target="_blank">Assessing the impact of energy saving measures on future energy demand</a></p>
+          <!-- /CMS:section -->
         </div>
       </div>
     </div>
@@ -77,7 +91,9 @@ permalink: /applications/
 <section class="container-lg p-responsive py-4 py-md-6 my-lg-6">
   <div class="recommended-reading">
     <h2 class="alt-h2 text-center mb-4">Recommended Reading</h2>
+    <!-- CMS:section id=app_reading_intro -->
     <p class="text-center mb-5">For a broader analysis of applications and advancements in OSeMOSYS, see the following peer-reviewed publications:</p>
+    <!-- /CMS:section -->
 
     <div class="publications-list">
       {% for publication in site.data.publications %}
