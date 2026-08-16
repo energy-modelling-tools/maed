@@ -23,9 +23,11 @@ permalink: /contact/
         </a>
       </div>
 
+      <!-- CMS:section id=community_intro -->
       <p class="text-center lead mb-4">
         Join other MAED practitioners by becoming part of our Discourse community—a dedicated online space for collaboration, learning, and sharing.
       </p>
+      <!-- /CMS:section -->
 
       <!-- Centered platform benefits -->
       <div class="text-center mb-4">
@@ -36,17 +38,23 @@ permalink: /contact/
         <div class="benefit-card text-center">
           {% octicon tools height:40 class:"fill-blue mb-3" aria-label:tools %}
           <h5>Troubleshoot Models</h5>
+          <!-- CMS:section id=benefit_troubleshoot -->
           <p class="text-gray">Share challenges, seek advice, and collaborate with other users to overcome technical hurdles in your FFRM applications.</p>
+          <!-- /CMS:section -->
         </div>
         <div class="benefit-card text-center">
           {% octicon checklist height:40 class:"fill-blue mb-3" aria-label:checklist %}
           <h5>Share Publications</h5>
+          <!-- CMS:section id=benefit_publications -->
           <p class="text-gray">Showcase your research, explore the work of others, and contribute to the expanding body of knowledge on integrated systems modeling.</p>
+          <!-- /CMS:section -->
         </div>
         <div class="benefit-card text-center">
           <img src="/assets/img/sparkles.svg" height="40" class="mb-3" alt="Events">
           <h5>Stay Updated on Events</h5>
+          <!-- CMS:section id=benefit_events -->
           <p class="text-gray">Be the first to know about upcoming capacity-building workshops, webinars, and networking opportunities.</p>
+          <!-- /CMS:section -->
         </div>
       </div>
     </div>
@@ -78,19 +86,25 @@ permalink: /contact/
           
           <div class="contribution-section text-left">
             <h5>Contribute to This Website</h5>
+            <!-- CMS:section id=contribute_intro -->
             <p>
               Want to share your MAED-related work, training, or resources? We welcome external contributions to this site!
             </p>
+            <!-- /CMS:section -->
             <h6>How to contribute:</h6>
+            <!-- CMS:section id=contribute_steps -->
             <ul class="contribution-steps">
               <li>Fork the repository: <a href="https://github.com/Model-for-Analysis-of-Energy-Demand" target="_blank">https://github.com/Model-for-Analysis-of-Energy-Demand </a></li>
               <li>Edit or add content (e.g. publications, capacity building activities)</li>
               <li>Submit a pull request</li>
               <li>A site administrator will review and approve if appropriate</li>
             </ul>
+            <!-- /CMS:section -->
+            <!-- CMS:section id=contribute_footer -->
             <p class="text-muted">
               This website exists to grow a self-sustaining MAED community—open to all. Let's make sure your work is visible and contributes to the global ecosystem!
             </p>
+            <!-- /CMS:section -->
           </div>
         </div>
       </div>
