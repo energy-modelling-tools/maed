@@ -19,7 +19,7 @@ jobs:
 
   prefill-yml:
     if: github.event_name == 'issues' && github.event.action == 'opened'
-    uses: energy-modelling-tools/.github/.github/workflows/prefill-yml-content.yml@main
+    uses: energy-modelling-tools/.github/.github/workflows/prefill-yml-content.yml@experiment/maed-plain-prefill
     secrets: inherit
 
   upload-images:
@@ -34,7 +34,7 @@ jobs:
 
   update-yml:
     if: github.event_name == 'issues' && github.event.action == 'edited'
-    uses: energy-modelling-tools/.github/.github/workflows/update-yml-with-images.yml@main
+    uses: energy-modelling-tools/.github/.github/workflows/update-yml-with-images.yml@experiment/maed-plain-prefill
     secrets: inherit
 
   cleanup:

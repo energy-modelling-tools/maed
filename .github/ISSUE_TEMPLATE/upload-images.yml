@@ -1,0 +1,76 @@
+name: "Upload Images"
+description: "Upload images/files into the repository via GitHub Issues"
+title: "Upload Images: "
+labels: ["upload-image"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For EMP event photos and partner logos, prefer **Edit YAML file**.
+        Drag the image into that event or partner box; a separate Upload Images issue is only needed for other folders.
+  - type: input
+    id: path
+    attributes:
+      label: "Target Path"
+      description: |
+        Where should the images be saved?
+        - For EMP events → use `assets/img/EMP/`
+        - For partner logos → use `assets/img/partners/`
+        - For general images → use `assets/img/`
+        
+        ⚠️ **Important**: The path and filename must match exactly what you use in your YAML/Markdown files!
+      placeholder: "assets/img/EMP/"
+      value: "assets/img/EMP/"
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: "Images"
+      description: |
+        **Step 1**: Drag or paste your image files into this text box below.
+        **Step 2**: GitHub will automatically convert them to Markdown format: `![image](https://github.com/...)`
+        **Step 3**: Change the `image` part (between `![` and `]`) to your desired filename.
+        
+        Example:
+        - `![EMP-A-2026](https://...)` → saves as `EMP-A-2026.jpg`
+        - `![partner-logo](https://...)` → saves as `partner-logo.png`
+      placeholder: |
+        ![my-filename](https://github.com/user-attachments/...)
+        ![another-image](https://github.com/user-attachments/...)
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: "Additional Notes"
+      description: "Any additional information about these images"
+      placeholder: "Optional notes..."
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 📋 How it works:
+        
+        **Where images go:**
+        - Images will be saved to the **Target Path** you specified above
+        - For EMP event images → use `assets/img/EMP/`
+        - For partner logos → use `assets/img/partners/`
+        - For general images → use `assets/img/`
+        
+        **How to name your files:**
+        1. Upload/paste your image → GitHub creates: `![image](https://...)`
+        2. Change `image` to your desired name → `![EMP-A-2026](https://...)`
+        3. Submit the issue → File saved as: `EMP-A-2026.jpg`
+        
+        **Important:**
+        - The filename in `![filename]` will be used exactly (special characters → underscores)
+        - File extension is added automatically based on image type
+        - If a file with the same name exists, a number suffix will be added (e.g., `file_1.jpg`)
+        
+        **⚠️ Critical**: Your path and filename must match exactly what you reference in your code:
+        - If your YAML has `image: "../assets/img/EMP/EMP-A-2026.jpg"`
+        - Then use path `assets/img/EMP/` and filename `![EMP-A-2026](https://...)`

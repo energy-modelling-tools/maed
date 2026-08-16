@@ -1,0 +1,42 @@
+name: "Edit YAML file"
+description: "Edit events, publications, partners, or social links. Drag photos into the issue after it opens."
+title: "YAML Edit: "
+labels: ["yml-edit"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        After you submit, this issue is filled with **one box per item**.
+
+        - EMP event photos: drag the file **inside that event's text box**. It is saved to `assets/img/EMP/`.
+        - Partner logos: drag the file **inside that partner's text box**. It is saved to `assets/img/partners/`.
+        - You do **not** need a separate Upload Images issue for these files.
+  - type: dropdown
+    id: yml_file
+    attributes:
+      label: "Which YAML file do you want to edit?"
+      description: "Select a YAML data file"
+      options:
+        - "_data/learning_events.yml"
+        - "_data/orgs.yml"
+        - "_data/publications.yml"
+        - "_data/social_media.yml"
+    validations:
+      required: true
+  - type: textarea
+    id: yaml_content
+    attributes:
+      label: "YAML Content"
+      description: "Leave this blank. It is replaced with editable items after the issue is created."
+      placeholder: |
+        (This field will be filled automatically)
+    validations:
+      required: false
+  - type: textarea
+    id: comment
+    attributes:
+      label: "Additional comment"
+      description: "Anything else you'd like to note"
+      placeholder: "Optional comment..."
+    validations:
+      required: false
