@@ -14,7 +14,7 @@ permissions:
 jobs:
   prefill-content:
     if: github.event_name == 'issues' && github.event.action == 'opened'
-    uses: energy-modelling-tools/.github/.github/workflows/prefill-issue-content.yml@main
+    uses: energy-modelling-tools/.github/.github/workflows/prefill-issue-content.yml@experiment/maed-plain-prefill
     secrets: inherit
 
   prefill-yml:
@@ -29,7 +29,7 @@ jobs:
 
   issue-to-pr:
     if: github.event_name == 'issues' && github.event.action == 'edited'
-    uses: energy-modelling-tools/.github/.github/workflows/issue-to-pr.yml@main
+    uses: energy-modelling-tools/.github/.github/workflows/issue-to-pr.yml@experiment/maed-plain-prefill
     secrets: inherit
 
   update-yml:
