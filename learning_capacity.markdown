@@ -17,7 +17,9 @@ permalink: /learning_capacity/
           <strong>📘 Open University Course on Energy Demand Projections with MAED (Model for Analysis of Energy Demand)</strong>
         </a>
       </h3>
+      <!-- CMS:section id=learning_ou_course -->
       <p class="animate-in"> This course provides an introduction to the MAED methodology and hands on experience using the user interface, calibrating a model, and running scenarios.</p>
+      <!-- /CMS:section -->
       <p class="animate-in">
         <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="btn btn-outline-light">Access Here →</a>
       </p>
@@ -29,7 +31,9 @@ permalink: /learning_capacity/
           <strong>MAED II User Interface</strong>
         </a>
       </h3>
+      <!-- CMS:section id=learning_ui -->
       <p class="animate-in"> Download the dedicated user interface for MAED here. It provides a single space to input data, run the model, and visualize results. </p>
+      <!-- /CMS:section -->
       <p class="animate-in">
         <a href=" https://github.com/Model-for-Analysis-of-Energy-Demand/MAED-UI" class="btn btn-outline-light">Access Here →</a>
       </p>
@@ -40,7 +44,9 @@ permalink: /learning_capacity/
           <strong>🌍 Energy Modelling Platforms (EMPs)</strong>
         </a>
       </h3>
+      <!-- CMS:section id=learning_emp -->
       <p class="animate-in">By offering training to professionals from the Global South, the Energy Modelling Platforms (EMPs) enable these countries to gather critical data, perform independent analyses, and develop credible investment proposals for clean energy infrastructure projects. EMPs play a vital role in what we refer to as local capacity building.</p>
+      <!-- /CMS:section -->
       <p class="animate-in">
         <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="btn btn-outline-light">Learn more →</a>
       </p>
@@ -52,7 +58,9 @@ permalink: /learning_capacity/
           <strong>🛠️ Flatpack Program</strong>
         </a>
       </h3>
+      <!-- CMS:section id=learning_flatpack -->
       <p class="animate-in text-justify">MAED Teaching Kit provides learning materials for an introductory course on using the MAED tool to build and analyse energy demand case studies. It includes editable lecture slides, hands-on exercises, sample learning objectives, and a suggested course timetable.</p>
+      <!-- /CMS:section -->
       <p class="animate-in">
         <a href="https://curriculum.climatecompatiblegrowth.com/courses/cdf06a65-0033-4c0e-a5a0-504ceaa96bc2" target="_blank" class="btn btn-outline-primary sky-blue-accent d-block d-sm-inline-block px-1 px-md-3">Open Teaching Kit →</a>
       </p>
@@ -86,7 +94,9 @@ permalink: /learning_capacity/
       <div class="clearfix gutter-spacious">
         <div class="col-md-12 animate-in mb-4">
           <h3 class="alt-h3 mb-3">EMP-Adjacent Events</h3>
+          <!-- CMS:section id=learning_adjacent_intro -->
           <p class="text-gray">These capacity building events used the OSeMOSYS methodology outside the formal EMP series:</p>
+          <!-- /CMS:section -->
           <ul>
             {% for adjacent in site.data.learning_events.adjacent_events %}
             <li class="animate-in">{{ adjacent.flag }} <a href="{{ adjacent.url }}" target="_blank">{{ adjacent.title }}</a></li>
