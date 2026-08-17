@@ -13,7 +13,9 @@ permalink: /learning_capacity/
   </div>
     <div class="mt-3 animate-in">
       <h3 class="alt-h3 mt-3 animate-in">
-        <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="text-dark font-weight-bold"><strong>[</strong></a>
+        <a href="https://www.open.edu/openlearncreate/course/view.php?id=11720" class="text-dark font-weight-bold">
+          <strong>📘 Open University Course on Energy Demand Projections with MAED (Model for Analysis of Energy Demand)</strong>
+        </a>
       </h3>
       <!-- CMS:section id=learning_ou_course -->
       <p class="animate-in">
@@ -27,7 +29,9 @@ permalink: /learning_capacity/
 
   <div class="mt-3 animate-in">
       <h3 class="alt-h3 mt-3 animate-in">
-      <a href="https://github.com/Model-for-Analysis-of-Energy-Demand/MAED-UI" class="text-dark font-weight-bold"><strong>[</strong></a>
+      <a href="https://github.com/Model-for-Analysis-of-Energy-Demand/MAED-UI" class="text-dark font-weight-bold">
+          <strong>MAED II User Interface</strong>
+        </a>
       </h3>
       <!-- CMS:section id=learning_ui -->
       <p class="animate-in">
@@ -40,7 +44,9 @@ permalink: /learning_capacity/
     </div>
     <div class="mt-3 animate-in">
       <h3 class="alt-h3 mt-3 animate-in">
-        <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="text-dark font-weight-bold"><strong>[</strong></a>
+        <a href="https://climatecompatiblegrowth.com/energy-modelling-platform/" class="text-dark font-weight-bold">
+          <strong>🌍 Energy Modelling Platforms (EMPs)</strong>
+        </a>
       </h3>
       <!-- CMS:section id=learning_emp -->
       <p class="animate-in">
@@ -54,7 +60,9 @@ permalink: /learning_capacity/
 
     <div class="mt-3 animate-in">
       <h3 class="alt-h3 mt-3 animate-in">
-        <a href="https://curriculum.climatecompatiblegrowth.com/courses/cdf06a65-0033-4c0e-a5a0-504ceaa96bc2" target="_blank" class="text-dark font-weight-bold"><strong>[</strong></a>
+        <a href="https://curriculum.climatecompatiblegrowth.com/courses/cdf06a65-0033-4c0e-a5a0-504ceaa96bc2" target="_blank" class="text-dark font-weight-bold">
+          <strong>🛠️ Flatpack Program</strong>
+        </a>
       </h3>
       <!-- CMS:section id=learning_flatpack -->
       <p class="animate-in text-justify">
