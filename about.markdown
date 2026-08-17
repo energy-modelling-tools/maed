@@ -65,17 +65,6 @@ permalink: /about/
   </div>
 </div>
 
-<h2 class="aboutpage-subtitle text-left mb-3 mt-lg-6">EDITING TEST</h2>
-<div class="col-md-12 animate-out mb-2">
-<!-- CMS:section id=test_section -->
-<p class="alt-lead text-gray text-justify-between col-md-15 mx-auto">
-This is a test!!<br>
-        To add a picture, drag it into this box, then rename the `image` part:<br>
-        <br>
-        <img src=""https://github.com/user-attachments/assets/24cafbc0-b16a-47bc-a924-dd6d32e9b933"" alt="short-name" class="img-fluid my-3" />
-</p>
-<!-- /CMS:section -->
-</div>
 <!-- Icon Links -->
 <div class="icon-links-section">
   <div class="icon-links-wrapper">

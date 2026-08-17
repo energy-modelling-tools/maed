@@ -46,15 +46,6 @@ events:
     flag: 🇿🇲
     title: "Forecasting Rural Cooking Final Demand and Household Air Pollution in Zambia: An Application of the MAED Model"
     url: "https://zenodo.org/records/11396527"
-- title: EMP-A 2024 - Accra, Ghana
-  image: ../assets/img/EMP/EMP-A-2024.jpg
-  alt: EMP-A 2024
-  description: Held from 20-31 May 2024 at the Ghana Institute of Management and Public Administration. Three teams worked on national energy models for Ethiopia, Kenya, and Zambia.
-  outputs:
-  - country: Zambia
-    flag: 🇿🇲
-    title: "Forecasting Rural Cooking Final Demand and Household Air Pollution in Zambia: An Application of the MAED Model"
-    url: "https://zenodo.org/records/11396527"
 adjacent_events:
 - country: Rwanda
   flag: 🇷🇼
