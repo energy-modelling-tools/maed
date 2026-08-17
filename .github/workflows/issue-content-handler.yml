@@ -14,12 +14,12 @@ permissions:
 jobs:
   prefill-content:
     if: github.event_name == 'issues' && github.event.action == 'opened'
-    uses: energy-modelling-tools/.github/.github/workflows/prefill-issue-content.yml@experiment/maed-plain-prefill
+    uses: energy-modelling-tools/.github/.github/workflows/prefill-issue-content.yml@main
     secrets: inherit
 
   prefill-yml:
     if: github.event_name == 'issues' && github.event.action == 'opened'
-    uses: energy-modelling-tools/.github/.github/workflows/prefill-yml-content.yml@experiment/maed-plain-prefill
+    uses: energy-modelling-tools/.github/.github/workflows/prefill-yml-content.yml@main
     secrets: inherit
 
   upload-images:
@@ -29,12 +29,12 @@ jobs:
 
   issue-to-pr:
     if: github.event_name == 'issues' && github.event.action == 'edited'
-    uses: energy-modelling-tools/.github/.github/workflows/issue-to-pr.yml@experiment/maed-plain-prefill
+    uses: energy-modelling-tools/.github/.github/workflows/issue-to-pr.yml@main
     secrets: inherit
 
   update-yml:
     if: github.event_name == 'issues' && github.event.action == 'edited'
-    uses: energy-modelling-tools/.github/.github/workflows/update-yml-with-images.yml@experiment/maed-plain-prefill
+    uses: energy-modelling-tools/.github/.github/workflows/update-yml-with-images.yml@main
     secrets: inherit
 
   cleanup:
