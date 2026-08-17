@@ -1,58 +1,62 @@
 events:
-  - title: "EMP-A 2025 - Addis Ababa, Ethiopia"
-    image: "../assets/img/EMP/EMP-A-2025.jpg"
-    alt: "EMP-A 2025"
-    description: "Hosted at the United Nations Economic Commission for Africa in April and May 2025. Five teams developed national-scale models focusing on specific sectors. The teams were from Rwanda (x2), Ghana, Kenya, and Ethiopia."
-    outputs:
-      - country: "Rwanda"
-        flag: "🇷🇼"
-        title: "Forecasting Final Energy Demand for Industry Sector in Rwanda Using Model for Analysis of Energy Demand (MAED)"
-        url: "https://zenodo.org/records/15364342"
-      - country: "Rwanda"
-        flag: "🇷🇼"
-        title: "Rwanda Energy Demand Analysis in Households: An End-Use Sector Demand Analysis"
-        url: "https://zenodo.org/records/15364304"
-      - country: "Ethiopia"
-        flag: "🇪🇹"
-        title: "Projection of Long-Term Agricultural Energy Demand in Ethiopia"
-        url: "https://zenodo.org/records/15364464"
-      - country: "Kenya"
-        flag: "🇰🇪"
-        title: "Analysis of Energy Demand Pathways for Household Cooking Sector in Kenya Using MAED-D"
-        url: "https://zenodo.org/records/15364177"
-      - country: "Ghana"
-        flag: "🇬🇭"
-        title: "Modelling Ghana's Long-Term Household Cooking Transition: Policy Pathways for Cleaner Energy and Emission Reduction"
-        url: "https://zenodo.org/records/15356289"
- 
-
-  - title: "EMP-G 2024 - Trieste, Italy"
-    image: "../assets/img/EMP/EMP-G-2024.jpg"
-    alt: "EMP-G 2024"
-    description: "Held from 12-23 August 2024 at ICTP. Two national teams developed country-specific models for specific sectors in South Africa and Uganda."
-    outputs:
-      - country: "South Africa"
-        flag: "🇿🇦"
-        title: "MAED-Driven Energy Planning for Residential Water Heating in South Africa: A Training Exercise"
-        url: "https://zenodo.org/records/13365233"
- 
-  - title: "EMP-A 2024 - Accra, Ghana"
-    image: "../assets/img/EMP/EMP-A-2024.jpg"
-    alt: "EMP-A 2024"
-    description: "Held from 20-31 May 2024 at the Ghana Institute of Management and Public Administration. Three teams worked on national energy models for Ethiopia, Kenya, and Zambia."
-    outputs:
-      - country: "Kenya"
-        flag: "🇰🇪"
-        title: "Energy Demand Analysis for Electrifying the Standard Gauge Railway (SGR) in Kenya"
-        url: "https://zenodo.org/records/11396149"
-      - country: "Zambia"
-        flag: "🇿🇲"
-        title: "Forecasting Rural Cooking Final Demand and Household Air Pollution in Zambia: An Application of the MAED Model"
-        url: "https://zenodo.org/records/11396527"
-  
-
+- title: EMP-A 2025 - Addis Ababa, Ethiopia
+  image: ../assets/img/EMP/EMP-A-2025.jpg
+  alt: EMP-A 2025
+  description: Hosted at the United Nations Economic Commission for Africa in April and May 2025. Five teams developed national-scale models focusing on specific sectors. The teams were from Rwanda (x2), Ghana, Kenya, and Ethiopia.
+  outputs:
+  - country: Rwanda
+    flag: 🇷🇼
+    title: Forecasting Final Energy Demand for Industry Sector in Rwanda Using Model for Analysis of Energy Demand (MAED)
+    url: "https://zenodo.org/records/15364342"
+  - country: Rwanda
+    flag: 🇷🇼
+    title: "Rwanda Energy Demand Analysis in Households: An End-Use Sector Demand Analysis"
+    url: "https://zenodo.org/records/15364304"
+  - country: Ethiopia
+    flag: 🇪🇹
+    title: Projection of Long-Term Agricultural Energy Demand in Ethiopia
+    url: "https://zenodo.org/records/15364464"
+  - country: Kenya
+    flag: 🇰🇪
+    title: Analysis of Energy Demand Pathways for Household Cooking Sector in Kenya Using MAED-D
+    url: "https://zenodo.org/records/15364177"
+  - country: Ghana
+    flag: 🇬🇭
+    title: "Modelling Ghana's Long-Term Household Cooking Transition: Policy Pathways for Cleaner Energy and Emission Reduction"
+    url: "https://zenodo.org/records/15356289"
+- title: EMP-G 2024 - Trieste, Italy
+  image: ../assets/img/EMP/EMP-G-2024.jpg
+  alt: EMP-G 2024
+  description: Held from 12-23 August 2024 at ICTP. Two national teams developed country-specific models for specific sectors in South Africa and Uganda.
+  outputs:
+  - country: South Africa
+    flag: 🇿🇦
+    title: "MAED-Driven Energy Planning for Residential Water Heating in South Africa: A Training Exercise"
+    url: "https://zenodo.org/records/13365233"
+- title: EMP-A 2024 - Accra, Ghana
+  image: ../assets/img/EMP/EMP-A-2024.jpg
+  alt: EMP-A 2024
+  description: Held from 20-31 May 2024 at the Ghana Institute of Management and Public Administration. Three teams worked on national energy models for Ethiopia, Kenya, and Zambia.
+  outputs:
+  - country: Kenya
+    flag: 🇰🇪
+    title: Energy Demand Analysis for Electrifying the Standard Gauge Railway (SGR) in Kenya
+    url: "https://zenodo.org/records/11396149"
+  - country: Zambia
+    flag: 🇿🇲
+    title: "Forecasting Rural Cooking Final Demand and Household Air Pollution in Zambia: An Application of the MAED Model"
+    url: "https://zenodo.org/records/11396527"
+- title: EMP-A 2024 - Accra, Ghana
+  image: ../assets/img/EMP/EMP-A-2024.jpg
+  alt: EMP-A 2024
+  description: Held from 20-31 May 2024 at the Ghana Institute of Management and Public Administration. Three teams worked on national energy models for Ethiopia, Kenya, and Zambia.
+  outputs:
+  - country: Zambia
+    flag: 🇿🇲
+    title: "Forecasting Rural Cooking Final Demand and Household Air Pollution in Zambia: An Application of the MAED Model"
+    url: "https://zenodo.org/records/11396527"
 adjacent_events:
-  - country: "Rwanda"
-    flag: "🇷🇼"
-    title: "Rwanda MAED Training"
-    url: "https://www.linkedin.com/posts/maed-model-for-the-analysis-of-energy-demand_kigali-activity-7340394463434842113-BUI8?utm_source=share&utm_medium=member_desktop&rcm=ACoAADQX5uYBR3zKSExuo0TLl84Xvk2J0w9MNjo"
+- country: Rwanda
+  flag: 🇷🇼
+  title: Rwanda MAED Training
+  url: "https://www.linkedin.com/posts/maed-model-for-the-analysis-of-energy-demand_kigali-activity-7340394463434842113-BUI8?utm_source=share&utm_medium=member_desktop&rcm=ACoAADQX5uYBR3zKSExuo0TLl84Xvk2J0w9MNjo"
